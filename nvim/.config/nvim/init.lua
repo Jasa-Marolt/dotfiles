@@ -2,6 +2,7 @@
 require("config.lazy")
 
 vim.keymap.set("n", "<leader>cr", function()
+  --vim.api.nvim_exec2('!echo "-------------------------------NEWLINE---------------------------------"', {})
   vim.api.nvim_exec2("!ninja -C build && ./build/main", {})
 end, { silent = true })
 
