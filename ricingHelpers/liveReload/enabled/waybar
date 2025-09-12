@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CONFIG_LOC="$HOME/.config/waybar/config.jsonc"
+
+trap "killall waybar" EXIT
+
+while true; do
+  waybar & 
+  inotifywait -e create,modify $CONFIG_LOC
+  killall waybar
+done
