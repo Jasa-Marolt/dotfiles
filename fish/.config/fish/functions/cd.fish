@@ -25,3 +25,4 @@ function cd --wraps='z;ls' --description 'alias cd (zoxide) fallback to builtin 
         end
     end
 end
+
