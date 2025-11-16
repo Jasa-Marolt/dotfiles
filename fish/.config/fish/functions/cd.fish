@@ -1,19 +1,27 @@
-function cd --wraps='z;ls' --description 'alias cd z;ls'
-    # Change directory using z
-    z $argv
+function cd --wraps='z;ls' --description 'alias cd (zoxide) fallback to builtin cd; ls'
+    # Try to change directory using z (zoxide)
+    if not z $argv
+        # If z fails, try using the built-in cd
+        builtin cd $argv
+    end
 
-    # Check the number of non-directory items in the current folder (excluding . and ..)
-    set countAll (ls -A| wc -l)
+    # Check if the last command (z or builtin cd) succeeded
+    if test $status -eq 0
+        # If the directory change was successful, run the ls logic
 
-    # If the count is less than 10, run ls -A
-    if test $countAll -lt 15
-        ls -A -t
-    else
+        # Check the number of all items (including hidden)
+        set countAll (ls -A | wc -l)
 
-        set countVisible (ls | wc -l)
-        if test $countVisible -lt 30
-            ls -t
+        if test $countAll -lt 15
+            # If few items, show all, sorted by time
+            ls -A -t
+        else
+            # If many items, check only visible ones
+            set countVisible (ls | wc -l)
+            if test $countVisible -lt 30
+                # If few visible items, show them, sorted by time
+                ls -t
+            end
         end
-
     end
 end
